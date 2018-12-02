@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Mqtt Commander</title>
+
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../node_modules/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../css/main.css"/>
+
+    <script>
+        delete module.exports
+    </script>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+</head>
+<body class="draggable">
+
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="navbar-collapse collapse order-1 order-md-0 dual-collapse2">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home</a>
+                </li>
+            </ul>
+        </div>
+        <div class="mx-auto order-0">
+            <a class="navbar-brand mx-auto row" href="#">
+                <span id="broker_url"></span> : <span id="port"></span>  => <span id="vehicle_id"></span>
+            </a>
+
+            <a class="btn btn-mini btn-primary ml-2" id="connect-button" href="#">
+                <span class="fa fa-spinner fa-spin spinner"></span>
+                <span class="text">Connect</span>
+            </a>
+
+            <button class="navbar-toggler ml-4" type="button" data-toggle="collapse" data-target=".dual-collapse2">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        <div class="navbar-collapse collapse order-3 dual-collapse2">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link settings-button" href="#">Settings</a>
+                </li>
+            </ul>
+        </div>
+    </nav>  
+
+    <!-- Content -->
+    <div class="container-fluid ">
+        <main role="main" class="col-sm-12 ml-sm-auto col-lg-12 p-4">
+            <div class="app-container">
+
+                <div class="p-2 content-container">
+                    <!-- Subscriber -->
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="subscriber-text">Subscribe</span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="/topic" aria-label="/topic" aria-describedby="subscribe-text" id="subscribe-topic" />
+                        <button type="button" class="btn btn-sm btn-success float-right ml-1" id="subscribe-button">Subscribe</button> 
+                    </div>
+
+                    <!-- Subscribed to -->
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="subscribed-to-text">Subscribed to</span>
+                        </div>
+                        <input type="text" class="form-control" disabled placeholder="None" aria-label="None" aria-describedby="subscribed-to-text" id="subscribed-to-topic" />
+                        <button type="button" class="btn btn-sm btn-success float-right ml-1" id="unsubscribe-button">Unsubscribe</button> 
+                    </div>
+                          
+
+                </div>
+                
+                <div class="p-2 point-container">
+                </div>
+
+                TODO
+                <ul>
+                    <li>input for points</li>
+                    <li>read points to json</li>
+                    <li>print/save json</li>
+                    <li>mqtt</li>
+                </ul>
+
+                <div class="">
+                    <button type="button" class="btn btn-primary m-1 float-right" id="close-button">Close</button>
+                    <button type="button" class="btn btn-success m-1 float-right save-points">Save</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/mission_parser.js"></script>
+    <script src="../js/window.js"></script>
+
+</body>
+</html>

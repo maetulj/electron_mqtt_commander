@@ -1,0 +1,16 @@
+.settings-header {
+    border-bottom: 1px solid black;
+    margin-bottom: 10px;
+}
+
+.settings-header .text {
+
+}
+
+.draggable {
+    -webkit-app-region: drag;
+}
+
+.not-draggable {
+    -webkit-app-region: no-drag;
+}

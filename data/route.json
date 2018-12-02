@@ -1,0 +1,151 @@
+{
+    "steps": [
+        {
+            "action": "test",
+            "pose": {
+                "x": 12,
+                "y": 13
+            }
+        },
+        {
+            "action": "test",
+            "pose": {
+                "x": 14,
+                "y": 15
+            }
+        },
+        {
+            "action": "test",
+            "pose": {
+                "x": 16,
+                "y": 17
+            }
+        },
+        {
+            "action": "test",
+            "pose": {
+                "x": 12,
+                "y": 13
+            }
+        },
+        {
+            "action": "test",
+            "pose": {
+                "x": 14,
+                "y": 15
+            }
+        },
+        {
+            "action": "test",
+            "pose": {
+                "x": 16,
+                "y": 17
+            }
+        },
+        {
+            "action": "test",
+            "pose": {
+                "x": 12,
+                "y": 13
+            }
+        },
+        {
+            "action": "test",
+            "pose": {
+                "x": 14,
+                "y": 15
+            }
+        },
+        {
+            "action": "test",
+            "pose": {
+                "x": 16,
+                "y": 17
+            }
+        },
+        {
+            "action": "test",
+            "pose": {
+                "x": 12,
+                "y": 13
+            }
+        },
+        {
+            "action": "test",
+            "pose": {
+                "x": 14,
+                "y": 15
+            }
+        },
+        {
+            "action": "test",
+            "pose": {
+                "x": 16,
+                "y": 17
+            }
+        },
+        {
+            "action": "test",
+            "pose": {
+                "x": 12,
+                "y": 13
+            }
+        },
+        {
+            "action": "test",
+            "pose": {
+                "x": 14,
+                "y": 15
+            }
+        },
+        {
+            "action": "test",
+            "pose": {
+                "x": 16,
+                "y": 17
+            }
+        },
+        {
+            "action": "test",
+            "pose": {
+                "x": 12,
+                "y": 13
+            }
+        },
+        {
+            "action": "test",
+            "pose": {
+                "x": 14,
+                "y": 15
+            }
+        },
+        {
+            "action": "test",
+            "pose": {
+                "x": 16,
+                "y": 17
+            }
+        },
+        {
+            "action": "test",
+            "pose": {
+                "x": 12,
+                "y": 13
+            }
+        },
+        {
+            "action": "test",
+            "pose": {
+                "x": 14,
+                "y": 15
+            }
+        },
+        {
+            "action": "test",
+            "pose": {
+                "x": 16,
+                "y": 17
+            }
+        }
+    ]
+}

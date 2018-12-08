@@ -29,7 +29,7 @@ function createWindow()
     mainWindow.loadFile('html/index.html');
 
     // Open DevTools.
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
 
     // On window close.
     mainWindow.on('closed', () => {

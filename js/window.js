@@ -4,6 +4,9 @@ const mustache = require('mustache');
 const path = require("path");
 const MqttClient = require(path.resolve('js/mqtt_client'));
 
+const Home = require(path.resolve('js/home'));
+const Status = require(path.resolve('js/status'));
+
 const pointTemplate = fs.readFileSync("html/point_template.html");
 
 class Application
@@ -20,9 +23,14 @@ class Application
 
         this.subscribed_topic = undefined;
 
+        this.$app_container = $('.app-container');
+
         this.$broker_url = $('#broker_url');
         this.$port = $('#port');
         this.$vehicle_id = $('#vehicle_id');
+
+        this.$home_link = $('#home_link');
+        this.$status_link = $('#status_link');
 
         this.$connect_button = $('#connect-button');
         this.$connect_spinner = this.$connect_button.find('.spinner');
@@ -59,11 +67,19 @@ class Application
             this.broker_url = String(arg.broker_url);
             this.port = Number(arg.port);
             this.vehicle_id = Number(arg.vehicle_id);
+            this.username = String(arg.username);
+            this.password = String(arg.password);
         
             $('#broker_url').text(this.broker_url);
             $('#port').text(this.port);
             $('#vehicle_id').text(this.vehicle_id);
         });
+
+        this.$home_link.on('click', this.onHome.bind(this));
+        this.$status_link.on('click', this.onStatus.bind(this));
+
+        // Init.
+        this.onHome();
     }
 
     onConnect()
@@ -143,6 +159,16 @@ class Application
     onMessage(callback)
     {
         this.mqtt_client.registerMessageCallback(callback);
+    }
+
+    onHome()
+    {
+        let home = new Home(this.$app_container);
+    }
+
+    onStatus()
+    {
+        let status = new Status(this.$app_container);
     }
 };
 

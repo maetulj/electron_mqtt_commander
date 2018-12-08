@@ -1,0 +1,37 @@
+<div class="p-2 content-container">
+    <!-- Subscriber -->
+    <div class="input-group input-group-sm mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="subscriber-text">Subscribe</span>
+        </div>
+        <input type="text" class="form-control" placeholder="/topic" aria-label="/topic" aria-describedby="subscribe-text" id="subscribe-topic" />
+        <button type="button" class="btn btn-sm btn-success float-right ml-1" id="subscribe-button">Subscribe</button> 
+    </div>
+
+    <!-- Subscribed to -->
+    <div class="input-group input-group-sm mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="subscribed-to-text">Subscribed to</span>
+        </div>
+        <input type="text" class="form-control" disabled placeholder="None" aria-label="None" aria-describedby="subscribed-to-text" id="subscribed-to-topic" />
+        <button type="button" class="btn btn-sm btn-success float-right ml-1" id="unsubscribe-button">Unsubscribe</button> 
+    </div>
+            
+
+</div>
+
+<div class="p-2 point-container">
+</div>
+
+TODO
+<ul>
+    <li>input for points</li>
+    <li>read points to json</li>
+    <li>print/save json</li>
+    <li>mqtt</li>
+</ul>
+
+<div class="">
+    <button type="button" class="btn btn-primary m-1 float-right" id="close-button">Close</button>
+    <button type="button" class="btn btn-success m-1 float-right save-points">Save</button>
+</div>

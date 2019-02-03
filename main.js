@@ -220,7 +220,7 @@ ipcMain.on('unsubscribe-request', (event, arg) => {
     {
         return;
     }
-    
+
     mqtt_client.unsubscribe(arg)
     .then((result) => {
         event.sender.send('unsubscribe-response', result);
@@ -238,4 +238,16 @@ ipcMain.on('subscriptions-request', (event, arg) => {
     event.sender.send('subscriptions-response', subscriptions);
 });
 
+/////////////
+// Objects //
+/////////////
 
+objects = [
+    "test",
+    "testek"
+];
+
+// Get list of objects.
+ipcMain.on('get-objects-request', (event, arg) => {
+    event.sender.send('get-objects-response', objects);
+});

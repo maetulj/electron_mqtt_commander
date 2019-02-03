@@ -32,6 +32,11 @@ class Robot
         }
     }
 
+    deserialize(object)
+    {
+        return new Robot("", 1);
+    }
+
 };
 
 module.exports = Robot;

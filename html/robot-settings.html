@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Robot Settings</title>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/settings.css"/>
+
+    <script>
+        delete module.exports
+    </script>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body class="p-4 draggable">
+    <div class="row settings-header">
+        <div class="col-xs-12">
+            <span class="settings-text"></span>
+        </div>
+    </div>
+
+    <div class="settings-list not-draggable">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+            <span class="input-group-text" id="broker-url-text">Broker URL</span>
+            </div>
+            <input type="text" class="form-control" id="broker-url" aria-describedby="broker-url-text">
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+            <span class="input-group-text" id="robot-text">Id</span>
+            </div>
+            <input type="text" class="form-control" id="robot-id" aria-describedby="port-text">
+        </div>
+    </div>
+
+    <div class="row not-draggable">
+        <div class="col-12">
+            <button type="button" class="btn btn-primary m-1 float-right close-button">Cancel</button>
+            <button type="button" class="btn btn-success m-1 float-right save-button">Save</button>
+        </div>
+    </div>
+
+<script src="../js/robot_settings.js"></script>
+</body>
+</html>

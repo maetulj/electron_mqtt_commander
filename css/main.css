@@ -60,6 +60,15 @@
     display: inline-block;
 }
 
+.led-red {
+    margin: 0 auto;
+    width: 24px;
+    height: 24px;
+    background-color: red;
+    border-radius: 50%;
+    display: inline-block;
+}
+
 .pt-18 {
     font-size: 18;
 }

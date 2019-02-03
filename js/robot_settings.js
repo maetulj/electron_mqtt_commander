@@ -75,6 +75,6 @@ $('.save-button').on('click', () => {
 
 $('.close-button').on('click', () => {
     console.log("close window");
-    ipcRenderer.send('close-settings-window');
+    ipcRenderer.send('close-robot-settings');
 
 });

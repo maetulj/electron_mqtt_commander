@@ -4,6 +4,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 // If not then JS will close the window as the object is garbage collected.
 let mainWindow = null;
 let settingsWindow = null;
+let robotSettingsWindow = null;
 
 let data = undefined;
 
@@ -14,7 +15,8 @@ global.sharedObj = {
         vehicle_id: 0,
         username: "",
         password: ""
-    }
+    },
+    robots: []
 };
 
 function createWindow() 
@@ -29,7 +31,7 @@ function createWindow()
     mainWindow.loadFile('html/index.html');
 
     // Open DevTools.
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     // On window close.
     mainWindow.on('closed', () => {
@@ -102,4 +104,47 @@ ipcMain.on('update-settings', (event, arg) => {
 
     // Send to main window.
     mainWindow.webContents.send('update-settings', arg);
+});
+
+ipcMain.on('add-robot', (event, arg) => {
+    console.log(arg);
+    global.sharedObj.robots.push(Number(arg));
+});
+
+ipcMain.on('remove-robot', (event, id) => {
+    console.log("removeign", id);
+    global.sharedObj.robots = global.sharedObj.robots.filter( (robot) => {
+        console.log(id, robot.getId(), id != robot.getId());
+        return robot.getId() != id;
+    });
+});
+
+ipcMain.on('close-robot-settings', () => {
+    if (robotSettingsWindow)
+    {
+        robotSettingsWindow.close();
+    }
+});
+
+ipcMain.on('open-robot-settings', (event, arg) => {
+    console.log(arg);
+    if (robotSettingsWindow)
+    {
+        return;
+    }
+
+    robotSettingsWindow = new BrowserWindow({
+        frame: false,
+        height: 450,
+        width: 400,
+        resizable: false
+    });
+
+    robotSettingsWindow.loadFile('html/robot-settings.html');
+
+    // robotSettingsWindow.openDevTools();
+
+    robotSettingsWindow.on('closed', () => {
+        robotSettingsWindow = null;
+    });
 });

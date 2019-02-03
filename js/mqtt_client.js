@@ -2,14 +2,22 @@ const mqtt = require('mqtt');
 
 class MqttClient 
 {
+    /**
+     * Consturct the MQTT Client.
+     */
     constructor()
     {
         this.client = undefined;
         this.is_connected = false;
 
-        this.subscribed_topic = undefined;
+        this.subscriptions = [];
     }
 
+    /**
+     * Connect to the broker.
+     * 
+     * @param {*} options 
+     */
     connect(options)
     {
         console.log("option", options);
@@ -52,11 +60,19 @@ class MqttClient
         return this.client ? this.client.connected : false;
     }
 
+    /**
+     * Close connection to the broker.
+     */
     close()
     {
         this.client.end();
     }
 
+    /**
+     * Subscribe to the given topic.
+     * 
+     * @param {*} topic Topic to subscribe to. 
+     */
     subscribe(topic)
     {
         if ( ! this.isConnected())
@@ -64,23 +80,59 @@ class MqttClient
             return false;
         }
 
-        this.client.subscribe(topic, (err, granted) => {
-            console.log("granted", granted);
+        return new Promise((resolve, reject) => {
+            this.client.subscribe(topic, (err, granted) => {
+                if (granted)
+                {
+                    this.subscriptions.push(topic);
+                    resolve(true);
+                }
+                else  {
+                    reject('Could not subscribe!' + err);
+                }
+            });
         });
-    
-        this.subscribed_topic = topic;
-        console.log("subscribed to", topic);
-
-        this.client.publish("test", "hey");
-
-        return true;
     }
 
-    unsubscribe()
+    /**
+     * Unsubscribe from the given topic.
+     */
+    unsubscribe(topic)
     {
-        this.client.unsubscribe(this.subscribed_topic);
+        console.log("mqtt unsub", topic);
+        return new Promise((resolve, reject) => {
+            this.client.unsubscribe(topic, (err) => {
+                console.log("unsub test", err);
+                if (err) 
+                {
+                    console.error("Failed to unsubscribe to ", topic);
+                    console.error(err);
+                    reject("Failed to unsubscribe from " + topic);
+                }
+                else 
+                {
+                    // Remove subscription from subscriptions.
+                    this.subscriptions = this.subscriptions.filter( subscription => subscription !== topic);
+                    console.log("Successfully unsubsribed from " + topic);
+                    resolve(true);
+                }
+            });
+        });
     }
 
+    /**
+     * Return all active subscriptions.
+     */
+    getSubscriptions()
+    {
+        return this.subscriptions;
+    }
+
+    /**
+     * Register callback on new message.
+     * 
+     * @param {*} callback Callback to be called on new message.
+     */
     registerMessageCallback(callback)
     {
         if ( ! this.isConnected())

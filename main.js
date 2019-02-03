@@ -198,17 +198,40 @@ ipcMain.on('disconnect-request', (event, arg) => {
 
 // Subscribe to topic request.
 ipcMain.on('subscribe', (event, arg) => {
-    console.log("subscribe!");
-    console.log(arg.topic);
+    mqtt_client.subscribe(arg.topic).then((result) => {
+        if ( ! result)
+        {
+            console.error("Failed to subscribe!");
+            return;
+        }
 
-    mqtt_client.subscribe(arg.topic);
+        let subscriptions = mqtt_client.getSubscriptions();
+        event.sender.send('subscriptions-response', subscriptions);
+        console.log("subs", subscriptions);
+    });
 });
 
 // Unsubscribe from topic request.
-ipcMain.on('unsubscribe', (event, arg) => {
-    console.log("unsubscribe");
-    console.log(arg.topic)
+ipcMain.on('unsubscribe-request', (event, arg) => {
+    console.log("unsubscribing", arg);
+    console.log(arg)
+
+    mqtt_client.unsubscribe(arg)
+    .then((result) => {
+        event.sender.send('unsubscribe-response', result);
+        let subscriptions = mqtt_client.getSubscriptions();
+        event.sender.send('subscriptions-response', subscriptions);
+    },
+    (error) => {
+        console.error("Failed to unsubscribe from " + arg);
+    });
 });
 
+// Get active subscriptions request.
+ipcMain.on('subscriptions-request', (event, arg) => {
+    let subscriptions = mqtt_client.getSubscriptions();
+    console.log("subs", subscriptions);
+    event.sender.send('subscriptions-response', subscriptions);
+});
 
 

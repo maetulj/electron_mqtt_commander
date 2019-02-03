@@ -11,12 +11,19 @@
     <!-- Subscribed to -->
     <div class="input-group input-group-sm mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text" id="subscribed-to-text">Subscribed to</span>
+            <span class="input-group-text" id="unsubscribe-text">Unsubscribe</span>
         </div>
-        <input type="text" class="form-control" disabled placeholder="None" aria-label="None" aria-describedby="subscribed-to-text" id="subscribed-to-topic" />
+        <input type="text" class="form-control" placeholder="None" aria-label="None" aria-describedby="subscribed-to-text" id="unsubscribe-topic" />
         <button type="button" class="btn btn-sm btn-success float-right ml-1" id="unsubscribe-button">Unsubscribe</button> 
     </div>
             
+    <div class="p-2 subscriptions-container">
+        <ul>
+            {{ #subscriptions }}
+                <li>{{ . }}</li>
+            {{ /subscriptions }}
+        </ul>
+    </div>
 
 </div>
 
@@ -27,13 +34,6 @@
     
 </div>
 
-TODO
-<ul>
-    <li>input for points</li>
-    <li>read points to json</li>
-    <li>print/save json</li>
-    <li>mqtt</li>
-</ul>
 
 <div class="">
     <button type="button" class="btn btn-primary m-1 float-right" id="close-button">Close</button>

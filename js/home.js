@@ -13,6 +13,8 @@ class Home
 
         this.log_limit = 10;
 
+        this.subscriptions = [];
+
         this.update();
 
         ipcRenderer.on('mqtt-message', (event, arg) => {
@@ -27,6 +29,13 @@ class Home
 
             this.update();
         });
+
+        ipcRenderer.on('subscriptions-response', (event, arg) => {
+            console.log("subscriptons", arg);
+            this.subscriptions = arg;
+
+            this.update();
+        });
     }
 
     /**
@@ -34,11 +43,13 @@ class Home
      */
     update()
     {
-        this.$container.html(mustache.render(homeHtml.toString()));
+        this.$container.html(mustache.render(homeHtml.toString(), {
+            subscriptions: this.subscriptions
+        }));
         this.$container.find('.logger-container').html(mustache.render(logHtml.toString(), { 
             log: this.log 
         }));
-        console.log(this.log);
+        console.log("log", this.log);
 
         this.$container.find('#subscribe-button').on('click', () => {
             let topic = this.$container.find('#subscribe-topic').val();
@@ -58,10 +69,9 @@ class Home
         });
 
         this.$container.find('#unsubscribe-button').on('click', () => {
-            console.log("unsub");
-            ipcRenderer.send('unsubscribe', {
-                'topic': '/test'
-            });
+            let topic = this.$container.find('#unsubscribe-topic').val();
+            console.log("unsub", topic);
+            ipcRenderer.send('unsubscribe-request', topic);
         });
     }
 

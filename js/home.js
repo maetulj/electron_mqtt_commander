@@ -1,6 +1,7 @@
 const { ipcRenderer } = require('electron');
 const mustache = require('mustache');
-const homeHtml = fs.readFileSync("html/home/home.html");
+const homeHtml = fs.readFileSync('html/home/home.html');
+const logHtml = fs.readFileSync('html/home/log.html');
 
 class Home 
 {
@@ -8,7 +9,24 @@ class Home
     {
         this.$container = $container;
         
+        this.log = [];
+
+        this.log_limit = 10;
+
         this.update();
+
+        ipcRenderer.on('mqtt-message', (event, arg) => {
+            console.log("msg", arg);
+            this.log.push(arg);
+
+            // Remove oldest element if log is full. 
+            if (this.log.length > this.log_limit)
+            {
+                this.log.shift();
+            }
+
+            this.update();
+        });
     }
 
     /**
@@ -17,6 +35,10 @@ class Home
     update()
     {
         this.$container.html(mustache.render(homeHtml.toString()));
+        this.$container.find('.logger-container').html(mustache.render(logHtml.toString(), { 
+            log: this.log 
+        }));
+        console.log(this.log);
 
         this.$container.find('#subscribe-button').on('click', () => {
             let topic = this.$container.find('#subscribe-topic').val();

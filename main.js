@@ -155,9 +155,28 @@ ipcMain.on('open-robot-settings', (event, arg) => {
 //////////////////
 var mqtt_client = new MqttClient();
 
+/**
+ * Message callback.
+ * 
+ * @param {*} topic 
+ * @param {*} message 
+ */
+function mqttMessageCallback(topic, message)
+{   
+    console.log("topic", topic);
+    console.log("message", message.toString());
+
+    mainWindow.webContents.send('mqtt-message', {
+        topic: topic,
+        message: message.toString()
+    });
+}
+
 // Connection request.
 ipcMain.on('connect-request', (event, arg) => {
     mqtt_client.connect(arg).then((result) => {
+        // Register message callback.
+        mqtt_client.registerMessageCallback(mqttMessageCallback);
         event.sender.send('connect-response', result);
     },
     (error) => {
@@ -181,6 +200,8 @@ ipcMain.on('disconnect-request', (event, arg) => {
 ipcMain.on('subscribe', (event, arg) => {
     console.log("subscribe!");
     console.log(arg.topic);
+
+    mqtt_client.subscribe(arg.topic);
 });
 
 // Unsubscribe from topic request.
@@ -188,3 +209,6 @@ ipcMain.on('unsubscribe', (event, arg) => {
     console.log("unsubscribe");
     console.log(arg.topic)
 });
+
+
+

@@ -11,6 +11,11 @@
     margin-bottom: 10px;
 }
 
+.logger-container {
+    border: 1px solid black;
+    margin-bottom: 10px;
+}
+
 .content-container {
     border: 1px solid black;
 }

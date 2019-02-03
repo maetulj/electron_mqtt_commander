@@ -59,9 +59,21 @@ class MqttClient
 
     subscribe(topic)
     {
-        this.client.subscribe(topic);
+        if ( ! this.isConnected())
+        {
+            return false;
+        }
+
+        this.client.subscribe(topic, (err, granted) => {
+            console.log("granted", granted);
+        });
     
         this.subscribed_topic = topic;
+        console.log("subscribed to", topic);
+
+        this.client.publish("test", "hey");
+
+        return true;
     }
 
     unsubscribe()
@@ -71,6 +83,11 @@ class MqttClient
 
     registerMessageCallback(callback)
     {
+        if ( ! this.isConnected())
+        {
+            return false;
+        }
+
         this.client.on('message', callback);
     }
 };

@@ -148,3 +148,13 @@ ipcMain.on('open-robot-settings', (event, arg) => {
         robotSettingsWindow = null;
     });
 });
+
+ipcMain.on('subscribe', (event, arg) => {
+    console.log("subscribe!");
+    console.log(arg.topic);
+});
+
+ipcMain.on('unsubscribe', (event, arg) => {
+    console.log("unsubscribe");
+    console.log(arg.topic)
+});

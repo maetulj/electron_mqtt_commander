@@ -163,9 +163,6 @@ var mqtt_client = new MqttClient();
  */
 function mqttMessageCallback(topic, message)
 {   
-    console.log("topic", topic);
-    console.log("message", message.toString());
-
     mainWindow.webContents.send('mqtt-message', {
         topic: topic,
         message: message.toString()
@@ -198,6 +195,12 @@ ipcMain.on('disconnect-request', (event, arg) => {
 
 // Subscribe to topic request.
 ipcMain.on('subscribe', (event, arg) => {
+
+    if ( ! mqtt_client.isConnected())
+    {
+        return;
+    }
+
     mqtt_client.subscribe(arg.topic).then((result) => {
         if ( ! result)
         {
@@ -207,15 +210,17 @@ ipcMain.on('subscribe', (event, arg) => {
 
         let subscriptions = mqtt_client.getSubscriptions();
         event.sender.send('subscriptions-response', subscriptions);
-        console.log("subs", subscriptions);
     });
 });
 
 // Unsubscribe from topic request.
 ipcMain.on('unsubscribe-request', (event, arg) => {
-    console.log("unsubscribing", arg);
-    console.log(arg)
 
+    if ( ! mqtt_client.isConnected())
+    {
+        return;
+    }
+    
     mqtt_client.unsubscribe(arg)
     .then((result) => {
         event.sender.send('unsubscribe-response', result);
@@ -230,7 +235,6 @@ ipcMain.on('unsubscribe-request', (event, arg) => {
 // Get active subscriptions request.
 ipcMain.on('subscriptions-request', (event, arg) => {
     let subscriptions = mqtt_client.getSubscriptions();
-    console.log("subs", subscriptions);
     event.sender.send('subscriptions-response', subscriptions);
 });
 

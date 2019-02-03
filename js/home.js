@@ -31,7 +31,6 @@ class Home
         });
 
         ipcRenderer.on('subscriptions-response', (event, arg) => {
-            console.log("subscriptons", arg);
             this.subscriptions = arg;
 
             this.update();
@@ -49,7 +48,6 @@ class Home
         this.$container.find('.logger-container').html(mustache.render(logHtml.toString(), { 
             log: this.log 
         }));
-        console.log("log", this.log);
 
         this.$container.find('#subscribe-button').on('click', () => {
             let topic = this.$container.find('#subscribe-topic').val();
@@ -57,11 +55,11 @@ class Home
             if (topic === "")
             {
                 console.error("No topic specified!");
-                this.expectError(true);
+                this.expectError('#subscribe-button', true);
                 return;
             }
 
-            this.expectError(false);
+            this.expectError('#subscribe-button', false);
 
             ipcRenderer.send('subscribe', {
                 'topic': topic
@@ -70,7 +68,16 @@ class Home
 
         this.$container.find('#unsubscribe-button').on('click', () => {
             let topic = this.$container.find('#unsubscribe-topic').val();
-            console.log("unsub", topic);
+
+            if (topic === "")
+            {
+                console.error("No topic specified!");
+                this.expectError('#unsubscribe-button', true);
+                return;
+            }
+
+            this.expectError('#unsubscribe-button', false);
+
             ipcRenderer.send('unsubscribe-request', topic);
         });
     }
@@ -80,15 +87,15 @@ class Home
      * 
      * @param {*} error If true the button is changed to btn-danger. Else to btn-success.
      */
-    expectError(error)
+    expectError(element, error)
     {
         if (error)
         {
-            this.$container.find('#subscribe-button').removeClass('btn-success').addClass('btn-danger');
+            this.$container.find(element).removeClass('btn-success').addClass('btn-danger');
         }
         else 
         {
-            this.$container.find('#subscribe-button').removeClass('btn-danger').addClass('btn-success');
+            this.$container.find(element).removeClass('btn-danger').addClass('btn-success');
         }
     }
 }

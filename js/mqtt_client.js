@@ -12,7 +12,7 @@ class MqttClient
 
     connect(options)
     {
-        console.log(options);
+        console.log("option", options);
         
         this.client = mqtt.connect(options);
 

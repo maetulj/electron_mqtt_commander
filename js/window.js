@@ -2,7 +2,6 @@ const { remote, ipcRenderer } = require('electron');
 const fs = require('fs')
 const mustache = require('mustache');
 const path = require("path");
-const MqttClient = require(path.resolve('js/mqtt_client'));
 
 const Home = require(path.resolve('js/home'));
 const Status = require(path.resolve('js/status'));
@@ -29,15 +28,6 @@ class Application
         this.$connect_spinner = this.$connect_button.find('.spinner');
         this.$connect_text = this.$connect_button.find('.text');
 
-        this.connected = false;
-
-        this.mqtt_client = new MqttClient();
-
-        this.init();
-    }
-
-    init()
-    {
         this.$broker_url.text(this.broker_url);
         this.$port.text(this.port);
         this.$vehicle_id.text(this.vehicle_id);
@@ -65,57 +55,118 @@ class Application
         this.onHome();
     }
 
+    /**
+     * Send IPC request to connect to MQTT broker.
+     * 
+     * @param {*} args Parameters of the MQTT broker.
+     */
+    mqttConnect(args)
+    {
+        return new Promise((resolve, reject) => {
+            ipcRenderer.send('connect-request', args);
+            ipcRenderer.on('connect-response', (event, result) => {
+                resolve(result);
+            });
+        });
+    }
+
+    /**
+     * Send IPC request to get information if connected.
+     */
+    mqttIsConnected()
+    {
+        return new Promise((resolve, reject) => {
+            ipcRenderer.send('is-connected-request', {});
+            ipcRenderer.on('is-connected-response', (event, result) => {
+                resolve(result);
+            });
+        });
+    }
+
+    /**
+     * Send IPC request to disconnect from the broker.
+     */
+    mqttDisconnect()
+    {
+        return new Promise((resolve, reject) => {
+            ipcRenderer.send('disconnect-request', {});
+            ipcRenderer.on('disconnect-response', (event, result) => {
+                resolve(result);
+            });
+        });
+    }
+
+    /**
+     * On connect callback. If not already connected then connect.
+     * Else disconnect from the broker.
+     */
     onConnect()
     {
         this.$connect_spinner.toggle(true);
 
-        if (this.mqtt_client.isConnected())
-        {
-            // Disconnect.
-            this.mqtt_client.close();
+        this.mqttIsConnected().then((result) => {
+            if (result)
+            {
+                // Disconnect.
+                this.mqttDisconnect();
 
-            this.$connect_spinner.toggle(false);
-            this.$connect_button.removeClass('btn-danger');
-            this.$connect_button.removeClass('btn-success');
-            this.$connect_button.addClass('btn-primary');
-            this.$connect_text.text('Connect');
+                this.$connect_spinner.toggle(false);
+                this.$connect_button.removeClass('btn-danger');
+                this.$connect_button.removeClass('btn-success');
+                this.$connect_button.addClass('btn-primary');
+                this.$connect_text.text('Connect');
 
-            return;
-        }
+                return;
+            }
 
-        this.mqtt_client.connect({ 
-            host: this.broker_url,
-            port: 1883,
-            username: this.username || null,
-            password: this.password || null
-            
-        }).then((result) => {
-            // Success.
-            this.$connect_spinner.toggle(false);
-            this.$connect_button.removeClass('btn-primary');
-            this.$connect_button.removeClass('btn-danger');
-            this.$connect_button.addClass('btn-success');
-            this.$connect_text.text("Connected");
-        }, (err) => {
-            // Failure.
-            this.$connect_spinner.toggle(false);
-            this.$connect_button.removeClass('btn-primary');
-            this.$connect_button.removeClass('btn-success');
-            this.$connect_button.addClass('btn-danger');
-            this.$connect_text.text("Failed");
+            // Connect.
+            this.mqttConnect({ 
+                host: this.broker_url || null,
+                port: 1883,
+                username: this.username || null,
+                password: this.password || null
+                
+            }).then((result) => {
+                if (result)
+                {
+                    // Connected.
+                    this.$connect_spinner.toggle(false);
+                    this.$connect_button.removeClass('btn-primary');
+                    this.$connect_button.removeClass('btn-danger');
+                    this.$connect_button.addClass('btn-success');
+                    this.$connect_text.text("Connected");
+                }
+                else 
+                {
+                    // Not connected.
+                    this.$connect_spinner.toggle(false);
+                    this.$connect_button.removeClass('btn-primary');
+                    this.$connect_button.removeClass('btn-success');
+                    this.$connect_button.addClass('btn-danger');
+                    this.$connect_text.text("Failed");
+                }
+            }, (err) => {
+                // Failure.
+                this.$connect_spinner.toggle(false);
+                this.$connect_button.removeClass('btn-primary');
+                this.$connect_button.removeClass('btn-success');
+                this.$connect_button.addClass('btn-danger');
+                this.$connect_text.text("Failed");
+            });
         });
     }
 
-    onMessage(callback)
-    {
-        this.mqtt_client.registerMessageCallback(callback);
-    }
-
+    /**
+     * Callback for pressing Home button.
+     */
     onHome()
     {
         let home = new Home(this.$app_container);
     }
 
+    /**
+     * Callback for pressing the Status button.
+     */
     onStatus()
     {
         let status = new Status(this.$app_container);

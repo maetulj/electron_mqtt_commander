@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
+const MqttClient = require('./js/mqtt_client');
 
 // Keep a global reference of the window object.
 // If not then JS will close the window as the object is garbage collected.
@@ -10,7 +11,7 @@ let data = undefined;
 
 global.sharedObj = { 
     data: {
-        broker_url: "not-set",
+        broker_url: undefined,
         port: undefined,
         vehicle_id: 0,
         username: "",
@@ -149,11 +150,40 @@ ipcMain.on('open-robot-settings', (event, arg) => {
     });
 });
 
+//////////////////
+// Mqtt.
+//////////////////
+var mqtt_client = new MqttClient();
+
+// Connection request.
+ipcMain.on('connect-request', (event, arg) => {
+    mqtt_client.connect(arg).then((result) => {
+        event.sender.send('connect-response', result);
+    },
+    (error) => {
+        event.sender.send('connect-response', false);
+    });
+});
+
+// Request fro checking if connected.
+ipcMain.on('is-connected-request', (event, arg) => {
+    let response = mqtt_client.isConnected();
+    event.sender.send('is-connected-response', response);
+});
+
+// Disconnect request.
+ipcMain.on('disconnect-request', (event, arg) => {
+    mqtt_client.close();
+    event.sender.send('disconnected-response', true);
+});
+
+// Subscribe to topic request.
 ipcMain.on('subscribe', (event, arg) => {
     console.log("subscribe!");
     console.log(arg.topic);
 });
 
+// Unsubscribe from topic request.
 ipcMain.on('unsubscribe', (event, arg) => {
     console.log("unsubscribe");
     console.log(arg.topic)
